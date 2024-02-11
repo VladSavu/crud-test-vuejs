@@ -1,11 +1,11 @@
 <template>
-  <q-card>
+  <q-card class="q-mb-sm">
     <q-card-section class="q-pa-none">
       <q-item>
         <q-item-section>
           <q-item-label class="name-email">
             <div class="row items-center">
-              <div class="q-mr-sm">Cutomer name:</div>
+              <div class="q-mr-sm">Customer name:</div>
               <div class="text-h6">{{ customer.first_name }}</div>
             </div>
             <div class="row items-center">
