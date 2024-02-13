@@ -15,6 +15,7 @@ export const useCustomerStore = defineStore("customer", {
           date_of_birth: "1990-01-01",
           phone_number: "1234567890",
           email: "john@doe.com",
+          bank_account_number: "123456789",
         },
         {
           first_name: "Jane",
@@ -22,6 +23,7 @@ export const useCustomerStore = defineStore("customer", {
           date_of_birth: "1990-01-01",
           phone_number: "1234567890",
           email: "jane@doe.com",
+          bank_account_number: "123456789",
         },
         {
           first_name: "Jim",
@@ -29,11 +31,12 @@ export const useCustomerStore = defineStore("customer", {
           date_of_birth: "1990-01-01",
           phone_number: "1234567890",
           email: "jim@doe.com",
+          bank_account_number: "123456789",
         },
       ],
     } as RootState),
   getters: {
-    // getCustomers: (state) => state.counter * 2,
+    getCustomers: (state) => state.customers,
   },
   actions: {
     createNewCustomer(customer: Customer) {
@@ -45,8 +48,20 @@ export const useCustomerStore = defineStore("customer", {
       if (index < 0) return;
       this.customers[index] = customer;
     },
+    updateCustomerByEmail(email: string, customer: Customer) {
+      if (!customer) return;
+      const index = this.customers.findIndex((customer) => customer.email === email);
+      if (index < 0) return;
+      this.customers[index] = customer;
+    },
     deleteCustomer(index: number) {
       if (!index) return;
+      this.customers.splice(index, 1);
+    },
+    deleteCustomerByEmail(email: string) {
+      if (!email) return;
+      const index = this.customers.findIndex((customer) => customer.email === email);
+      if (index < 0) return;
       this.customers.splice(index, 1);
     },
   },

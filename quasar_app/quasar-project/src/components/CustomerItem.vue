@@ -24,20 +24,40 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, Ref } from "vue";
+  import { ref, defineProps } from "vue";
   import { Customer } from "src/components/models";
+  import { useCustomerStore } from "src/stores/customer-store";
+  import CustomerEditDialog from "src/components/CustomerEditDialog.vue";
+  import { useQuasar } from "quasar";
+
+  const customerStore = useCustomerStore();
+  const $q = useQuasar();
 
   const props = defineProps<{
     customer: Customer;
   }>();
 
-  function editCustomer() {
-    console.log("Edit customer");
-  }
+  const customer = ref<Customer>(props.customer);
+
+  // function editCustomer() {
+  //   console.log("Edit customer");
+  // }
 
   function deleteCustomer() {
     console.log("Delete customer");
+    customerStore.deleteCustomerByEmail(props.customer.email);
   }
+
+  const editCustomer = () => {
+    console.log("Edit customer", customer.value);
+    $q.dialog({
+      title: "Edit customer",
+      component: CustomerEditDialog,
+      componentProps: {
+        customer: customer.value as Customer,
+      },
+    });
+  };
 </script>
 
 <style scoped>

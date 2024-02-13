@@ -2,7 +2,7 @@
   <div class="user-list">
     <div class="text-h3 q-mb-sm">Users list</div>
     <CustomerItem
-      v-for="customer in customerStore.customers"
+      v-for="customer in customerStore.getCustomers"
       v-bind:key="customer.id"
       :customer="customer"
     />
