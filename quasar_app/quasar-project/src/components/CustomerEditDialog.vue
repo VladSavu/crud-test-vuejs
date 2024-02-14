@@ -1,11 +1,11 @@
 <template>
   <q-dialog ref="dialogRef" @hide="onDialogHide">
     <q-card class="q-dialog-plugin">
-      <q-form @submit="onOKClick">
+      <q-form @submit="onOKClick" @cancel="onCancel">
         <q-card-section>
           <div class="text-h4 q-pb-md">Edit customer</div>
           <q-input
-            v-model="customerRef.first_name"
+            v-model="copy.first_name"
             label="First Name"
             outlined
             dense
@@ -13,7 +13,7 @@
             :rules="[(val) => (val && val.length > 0) || 'Please insert your first name']"
           />
           <q-input
-            v-model="customerRef.last_name"
+            v-model="copy.last_name"
             label="Last Name"
             outlined
             dense
@@ -21,7 +21,7 @@
             :rules="[(val) => (val && val.length > 0) || 'Please insert your last name']"
           />
           <q-input
-            v-model="customerRef.email"
+            v-model="copy.email"
             label="Email"
             outlined
             dense
@@ -32,7 +32,7 @@
             ]"
           />
           <q-input
-            v-model="customerRef.phone_number"
+            v-model="copy.phone_number"
             label="Phone Number"
             outlined
             dense
@@ -43,7 +43,7 @@
             ]"
           />
           <q-input
-            v-model="customerRef.bank_account_number"
+            v-model="copy.bank_account_number"
             label="Account Number"
             type="number"
             outlined
@@ -57,7 +57,7 @@
           <q-input
             outlined
             dense
-            v-model="customerRef.date_of_birth"
+            v-model="copy.date_of_birth"
             mask="date"
             label="Date of birth"
             :rules="[
@@ -69,7 +69,7 @@
 
         <q-card-actions align="right">
           <q-btn color="secondary" label="Update" type="submit" />
-          <q-btn color="primary" label="Cancel" @click="onDialogCancel" />
+          <q-btn color="primary" label="Cancel" type="cancel" @click="onDialogCancel" />
         </q-card-actions>
       </q-form>
     </q-card>
@@ -86,14 +86,19 @@
     validatePhoneNumber,
     validateBankAccountNumber,
   } from "src/services/VerificationService";
+  import { useCustomerStore } from "src/stores/customer-store";
 
   const props = defineProps<{
     customer: Customer;
   }>();
 
-  //   console.log("CustomerEditDialog", props.customer);
+  const customerStore = useCustomerStore();
 
   const customerRef = ref<Customer>(props.customer);
+
+  const copy = customerRef.value;
+
+  const originalCustomer: Customer = { ...customerRef.value } as Customer;
 
   console.log("CustomerEditDialog", customerRef.value);
 
@@ -111,12 +116,21 @@
   //                    example: onDialogOK({ /*...*/ }) - with payload
   // onDialogCancel - Function to call to settle dialog with "cancel" outcome
 
-  // this is part of our example (so not required)
   function onOKClick() {
     // on OK, it is REQUIRED to
     // call onDialogOK (with optional payload)
+    // customerStore.updateCustomerByEmail(copyCustomer.email, copyCustomer);
     onDialogOK();
     // or with payload: onDialogOK({ ... })
+    // ...and it will also hide the dialog automatically
+  }
+
+  function onCancel() {
+    // on Cancel, it is REQUIRED to
+    // call onDialogCancel
+    customerStore.updateCustomerByEmail(originalCustomer.email, originalCustomer);
+
+    onDialogCancel();
     // ...and it will also hide the dialog automatically
   }
 </script>
